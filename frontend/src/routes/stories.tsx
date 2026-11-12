@@ -23,7 +23,7 @@ const stories = [
     title: 'A little patience. A lot of love.',
     body: 'Biscuit arrived scared and unsure. With a warm bed, a patient foster family and a whole lot of snacks, he found his confidence again. Today, he greets every visitor like an old friend.',
     steps: ['Rescued from the streets', 'Fostered for six weeks', 'Matched with a loving family'],
-    image: '/rescue-story.jpg',
+    image: '/', // image here
   },
   {
     name: 'Ming',

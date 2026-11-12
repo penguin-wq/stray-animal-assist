@@ -191,7 +191,7 @@ export function InquiryPage({ kind, animal }: { kind: InquiryKind; animal?: Resc
         {/* Left photo panel with a short message (large screens only). */}
         <aside className='relative hidden overflow-hidden lg:block'>
           <img
-            src='/inquiry-background.png'
+            src='/' // background image
             alt='Rescue animals resting together'
             className='absolute inset-0 size-full object-cover'
             width={1024}
