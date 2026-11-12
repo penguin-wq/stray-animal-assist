@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1ebf3" />
+    <title>StrayAssist · Offline</title>
+    <style>
+      :root {
+        --ink: #111214;
+        --muted: #4b5563;
+        --lavender: #f1ebf3;
+        --lavender-deep: #8a7890;
+        --cream: #faf9f7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+        color: var(--ink);
+        background: var(--cream);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        position: relative;
+        isolation: isolate;
+      }
+
+      .page::before,
+      .page::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        border-radius: 999px;
+        filter: blur(2px);
+        opacity: 0.7;
+      }
+      .page::before {
+        width: 420px;
+        height: 420px;
+        top: -180px;
+        right: -100px;
+        background: #eee6f0;
+        animation: drift 10s ease-in-out infinite alternate;
+      }
+      .page::after {
+        width: 300px;
+        height: 300px;
+        bottom: -150px;
+        left: -80px;
+        background: #f4e9df;
+        animation: drift 12s ease-in-out -2s infinite alternate-reverse;
+      }
+
+      .brand {
+        position: absolute;
+        top: 34px;
+        left: max(32px, calc(50% - 640px));
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #4b5563;
+        font-size: 21px;
+        font-weight: 750;
+        letter-spacing: -0.04em;
+      }
+      .brand-mark {
+        width: 22px;
+        height: 22px;
+        border: 2px solid currentColor;
+        position: relative;
+      }
+      .brand-mark::before,
+      .brand-mark::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        height: 2px;
+        top: 8px;
+      }
+      .brand-mark::before {
+        transform: rotate(45deg);
+      }
+      .brand-mark::after {
+        transform: rotate(-45deg);
+      }
+
+      .content {
+        width: min(100%, 680px);
+        text-align: center;
+        animation: appear 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: var(--lavender);
+        color: #6f5d76;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .eyebrow i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6f5d76;
+        animation: pulse 1.7s ease-in-out infinite;
+      }
+      h1 {
+        margin: 22px 0 14px;
+        font-size: clamp(42px, 7vw, 72px);
+        line-height: 0.98;
+        letter-spacing: -0.065em;
+      }
+      .message {
+        max-width: 560px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      /* --- THE RECOLORED CAT SCENE --- */
+      .scene {
+        height: 190px;
+        margin: 32px auto 26px;
+        position: relative;
+        width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 20px;
+      }
+
+      .ground {
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        bottom: 0;
+        height: 13px;
+        border-radius: 50%;
+        background: #d8d2d9;
+        animation: breathe 3.2s ease-in-out infinite;
+      }
+
+      .cat {
+        background-color: #d8cbd9; /* Lavender body */
+        height: 65px;
+        width: 80px;
+        border-radius: 0 80px 80px 0;
+        position: absolute;
+        bottom: 10px;
+        right: 50px;
+        animation: float 3.2s ease-in-out infinite;
+      }
+      .ear {
+        height: 15px;
+        width: 15px;
+        background-color: #d8cbd9;
+        position: absolute;
+        bottom: 64px;
+        left: 8px;
+        border-radius: 20px 0 0 0;
+        box-shadow: 25px 0 #d8cbd9;
+      }
+      .ear::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 6px;
+        height: 6px;
+        background: #b39bb8; /* Deep mauve inner ear */
+        border-radius: 50% 0 0 0;
+      }
+      .eye,
+      .eye:before {
+        height: 7px;
+        width: 10px;
+        border: 2px solid var(--ink);
+        position: absolute;
+        border-radius: 0 0 15px 15px;
+        border-top: none;
+      }
+      .eye {
+        top: 18px;
+        left: 15px;
+      }
+      .eye:before {
+        content: '';
+        left: 30px;
+      }
+
+      .nose {
+        background-color: #b39bb8; /* Deep mauve nose */
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        position: absolute;
+        top: 32px;
+        left: 25px;
+        box-shadow: 12px 0 #b39bb8;
+      }
+      .nose:before {
+        content: '';
+        width: 12px;
+        height: 8px;
+        position: absolute;
+        background-color: #b39bb8;
+        left: 6px;
+      }
+      .nose:after {
+        content: '';
+        position: absolute;
+        height: 0;
+        width: 0;
+        border-top: 8px solid #b39bb8; /* Matching mauve */
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        bottom: 7px;
+        left: 6px;
+      }
+
+      .mouth {
+        background-color: var(--ink);
+        height: 15px;
+        width: 17px;
+        position: absolute;
+        border-radius: 0 0 5px 5px;
+        top: 38px;
+        left: 27px;
+        animation: mouth-move 2s infinite;
+        transform-origin: top;
+      }
+
+      .cat-body {
+        background-color: #d8cbd9; /* Lavender */
+        height: 90px;
+        width: 140px;
+        position: absolute;
+        right: 65px;
+        bottom: 10px;
+        border-radius: 60px 60px 0 0;
+        animation: sleep 2s infinite;
+        transform-origin: bottom right;
+      }
+      .cat-body:before {
+        content: '';
+        position: absolute;
+        background-color: #faf9f7; /* Cream paws */
+        height: 12px;
+        width: 30px;
+        border-radius: 6px;
+        bottom: 0;
+        left: 22px;
+        box-shadow: 45px 0 #faf9f7;
+      }
+
+      .tail {
+        background-color: #b39bb8; /* Deep mauve */
+        height: 20px;
+        width: 100px;
+        position: absolute;
+        right: 150px;
+        bottom: 10px;
+        border-radius: 20px 0 0 20px;
+        animation: wag 1.2s ease-in-out infinite alternate;
+        transform-origin: right center;
+      }
+
+      .bubble {
+        height: 20px;
+        width: 20px;
+        background-color: #ffffff;
+        position: absolute;
+        left: 65px;
+        top: 20px;
+        border-radius: 50px 50px 50px 5px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: bubble-scale 2s infinite;
+      }
+
+      .shadow {
+        height: 10px;
+        width: 240px;
+        background-color: rgba(0, 0, 0, 0.08); /* Softer shadow */
+        border-radius: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        animation: shadow 2s infinite;
+      }
+
+      /* --- ANIMATIONS --- */
+      @keyframes mouth-move {
+        50% {
+          transform: scaleY(0.7);
+        }
+      }
+      @keyframes sleep {
+        50% {
+          transform: scale(0.9, 1.05);
+        }
+      }
+      @keyframes bubble-scale {
+        50% {
+          transform: scale(1.6);
+        }
+      }
+      @keyframes shadow {
+        50% {
+          transform: scaleX(0.7);
+        }
+      }
+      @keyframes appear {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes drift {
+        from {
+          transform: translate3d(-12px, 8px, 0) scale(1);
+        }
+        to {
+          transform: translate3d(16px, -12px, 0) scale(1.08);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-7px);
+        }
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: scaleX(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scaleX(0.88);
+          opacity: 0.5;
+        }
+      }
+      @keyframes wag {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-10deg);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.45;
+          transform: scale(0.85);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.15);
+        }
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #6b7280;
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      .status::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d2a26d;
+        animation: pulse 1.7s ease-in-out infinite;
+      }
+      .hint {
+        margin-top: 17px;
+        color: #9ca3af;
+        font-size: 12px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      @media (max-width: 560px) {
+        .page {
+          padding: 24px;
+        }
+        .brand {
+          top: 24px;
+          left: 24px;
+        }
+        .content {
+          margin-top: 32px;
+        }
+        .scene {
+          margin-top: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="brand" aria-label="StrayAssist">
+        <span class="brand-mark" aria-hidden="true"></span>StrayAssist
+      </div>
+      <section class="content" aria-labelledby="offline-title">
+        <p class="eyebrow"><i aria-hidden="true"></i> Connection paused</p>
+        <h1 id="offline-title">We&apos;re offline for a moment.</h1>
+        <p class="message">
+          The shelter door is still open, but the internet wandered off. We&apos;ll be ready to help
+          you rescue a little love as soon as you&apos;re connected again.
+        </p>
+
+        <!-- Original Cat Design, Recolored & Centered -->
+        <div class="scene" aria-label="A sleepy cat resting" role="img">
+          <div class="ground"></div>
+          <div class="shadow"></div>
+          <div class="cat">
+            <div class="ear"></div>
+            <div class="eye"></div>
+            <div class="mouth"></div>
+            <div class="nose"></div>
+            <div class="tail"></div>
+            <div class="cat-body"></div>
+            <div class="bubble"></div>
+          </div>
+        </div>
+
+        <p class="status">Waiting for your connection</p>
+        <p class="hint">Please check your network and try again.</p>
+      </section>
+    </main>
+  </body>
+</html>
