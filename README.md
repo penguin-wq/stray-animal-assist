@@ -10,7 +10,7 @@ Website for **StrayAssist**, a stray animal rescue and adoption organization ser
 | **Routing** | TanStack Router, file-based (`src/routes`) |
 | **Styling** | Tailwind CSS v4, shadcn/ui (new-york), Radix UI |
 | **Forms** | react-hook-form helpers, Zod validation |
-| **Data** | Static seed data in `src/data` (no backend yet) |
+| **Data** | Static seed data in `src/data`; Spring Boot API proxied at `/api` |
 | **Testing** | Vitest + Testing Library (jsdom) |
 | **Tooling** | Bun, ESLint 9, Prettier, TypeScript (strict) |
 | **Offline** | Production-only service worker with an offline fallback page |
@@ -23,22 +23,7 @@ bun install
 bun run dev
 ```
 
-The dev server runs on Vite's default `http://localhost:5173`.
-
-### Scripts
-
-| Command | Purpose |
-|---|---|
-| `bun run dev` | Start the dev server |
-| `bun run build` | Production build into `dist/` |
-| `bun run build:dev` | Build in development mode |
-| `bun run preview` | Serve the production build locally |
-| `bun run lint` | ESLint |
-| `bun run format` | Prettier (write) |
-| `bun run test` | Run tests once |
-| `bun run test:watch` | Tests in watch mode |
-
-Type checking: `bunx tsc --noEmit`
+The dev server runs on Vite's default `http://localhost:5173`. Scripts, troubleshooting, and how-to guides are in [help.md](help.md). To run the full stack with the backend, see the root [help.md](../help.md).
 
 ## Pages
 
@@ -116,12 +101,18 @@ Two suites, 21 tests:
 
 ## Backend Integration
 
-There is no backend in this repository yet. When the Spring Boot API (`http://localhost:8080`) is connected:
+The Spring Boot API (Java 21, Gradle) lives in `../backend` and runs on `http://localhost:8080`. The frontend reaches it through the Vite dev proxy, so no CORS settings are needed.
 
-- Call it with absolute paths such as `fetch('/api/hello')`, never relative paths like `fetch('api/hello')`
-- Route `/api` through the Vite proxy using `VITE_PROXY_TARGET` (`http://backend:8080` in Docker, `http://localhost:8080` locally)
-- The proxy is not configured in `vite.config.ts` yet
+- Call the API with absolute paths such as `fetch('/api/hello')`, never relative paths like `fetch('api/hello')`
+- Make API calls from the browser, not from route loaders, since a relative URL fails during SSR
+- `vite.config.ts` proxies `/api` to `VITE_PROXY_TARGET`: `http://backend:8080` in Docker, `http://localhost:8080` locally
+- The proxy applies to the dev server only
+
+Run commands and verification steps are in the root [help.md](../help.md).
 
 ## CI
 
-`.github/workflows/ci.yaml` runs on pushes to `main` and on pull requests touching `frontend/`: install with a frozen lockfile, lint, type check, test, build, then upload `dist/` as an artifact.
+Two workflows run only when their own folder changes, on pushes to `main` and on pull requests:
+
+- `.github/workflows/ci.yaml` (frontend): install with a frozen lockfile, lint, type check, test, build, then upload `dist/` as an artifact
+- `.github/workflows/backend-ci.yaml` (backend): `./gradlew build` on Java 21
