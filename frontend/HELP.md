@@ -11,18 +11,18 @@ Guide for working on the StrayAssist frontend. For the full stack, see the root 
 
 Run from `frontend/`.
 
-| Command | Purpose |
-|---|---|
-| `bun install` | Install dependencies |
-| `bun run dev` | Dev server at `http://localhost:5173` |
-| `bun run build` | Production build into `dist/` |
-| `bun run build:dev` | Build in development mode |
-| `bun run preview` | Serve the production build |
-| `bun run lint` | ESLint |
-| `bun run format` | Prettier (write) |
-| `bun run test` | Run tests once |
-| `bun run test:watch` | Tests in watch mode |
-| `bunx tsc --noEmit` | Type check |
+| Command              | Purpose                               |
+| -------------------- | ------------------------------------- |
+| `bun install`        | Install dependencies                  |
+| `bun run dev`        | Dev server at `http://localhost:5173` |
+| `bun run build`      | Production build into `dist/`         |
+| `bun run build:dev`  | Build in development mode             |
+| `bun run preview`    | Serve the production build            |
+| `bun run lint`       | ESLint                                |
+| `bun run format`     | Prettier (write)                      |
+| `bun run test`       | Run tests once                        |
+| `bun run test:watch` | Tests in watch mode                   |
+| `bunx tsc --noEmit`  | Type check                            |
 
 Before pushing, run the same checks CI runs:
 
@@ -35,7 +35,7 @@ bun run lint && bunx tsc --noEmit && bun run test && bun run build
 Always use absolute paths:
 
 ```ts
-fetch('/api/hello')
+fetch('/api/hello');
 ```
 
 Never use relative paths such as `fetch('api/hello')`. Vite would answer with `index.html` instead of JSON.
@@ -62,10 +62,10 @@ export function HelloMessage() {
 
 The Vite proxy in `vite.config.ts` forwards `/api` to `VITE_PROXY_TARGET`:
 
-| Environment | Value |
-|---|---|
-| Docker | `http://backend:8080` |
-| Local | `http://localhost:8080` (default) |
+| Environment | Value                             |
+| ----------- | --------------------------------- |
+| Docker      | `http://backend:8080`             |
+| Local       | `http://localhost:8080` (default) |
 
 The proxy works in the dev server only.
 
