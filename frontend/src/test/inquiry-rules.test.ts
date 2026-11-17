@@ -1,4 +1,4 @@
-// Checks the adopter screening rules (age, ID photo, home photos, landlord question).
+/* Checks the adopter screening rules (age, ID photo, home photos, landlord question). */
 
 import { describe, expect, it } from 'vitest';
 import {
@@ -10,7 +10,7 @@ import {
   photoRules,
 } from '@/lib/inquiry-schemas';
 
-const today = new Date(2026, 10, 11); // 11 Nov 2026
+const today = new Date(2026, 10, 11);
 
 describe('adopter screening rules', () => {
   it('rejects adopters younger than 18', () => {

@@ -1,4 +1,4 @@
-// Checks that each main page address opens the right page.
+/* Checks that each main page address opens the right page. */
 
 import { QueryClient } from '@tanstack/react-query';
 import { createRouter, rootRouteId } from '@tanstack/react-router';
